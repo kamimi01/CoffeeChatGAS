@@ -59,8 +59,8 @@ function getTheme_(dateList, sheet, nextdayString) {
       const specificDateRange = sheet.getRange(cell);
       theme = specificDateRange.getDisplayValue();
 
-      const openaiEnabled = PropertiesService.getScriptProperties().getProperty("OPENAI_ENABLED") == "true";
-      if (theme == "" && openaiEnabled) {
+      // スプレッドシートにテーマがないときは、OpenAI でテーマを生成する
+      if (theme == "") {
         theme = requestOpenAI_();
         writeThemeToSpreadsheet_(theme, sheet, cell)
       }
