@@ -36,6 +36,7 @@ When there is not, generate a theme with OpenAI and post it. The Generated theme
 
 6. Set Script Properties in gas
     - `SHEET_NAME`(required): Spreadsheet name
+    - `SPREADSHEET_URL`(required): Spreadsheet URL
     - `SLACK_BOT_TOKEN`(required): Slack bot token you generated 
     - `SLACK_CHANNEL_ID`(required): Slack channel ID you want to post 
     - `OPENAI_API_KEY`(optional): OpenAI API Key
