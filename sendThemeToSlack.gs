@@ -116,6 +116,6 @@ function postTextToSlack_(theme) {
   };
   const slackApp = SlackApp.create(PropertiesService.getScriptProperties().getProperty("SLACK_BOT_TOKEN"));
   const channelId = PropertiesService.getScriptProperties().getProperty("SLACK_CHANNEL_ID");
-  const text = `:sunny::sunny::sunny: *明日10:15から Slack で雑談会します！*:sunny::sunny::sunny:\n\n:speech_balloon:【明日のテーマ】:speech_balloon:\n${theme}\n\n参加お待ちしてます:raised_hands:\n\n:sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny:`;
+  const text = `:sunny::sunny::sunny: *明日10:15から Slack で雑談会します！*:sunny::sunny::sunny:\n\n:speech_balloon: テーマ :speech_balloon:\n${theme}\n\n参加お待ちしてます:raised_hands:\n\n:sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny::sunny:`;
   slackApp.postMessage(channelId, text);
 }
