@@ -22,10 +22,10 @@ When there is not, generate a theme with OpenAI and post it. The Generated theme
     - Script ID: `1on93YOYfSmV92R5q59NpKmsyWIQD8qnoLYk-gkQBI92C58SPyA2x1-bq`
 
 4. Set Script Properties.
-    - `SHEET_NAME`: Spreadsheet name
-    - `SLACK_BOT_TOKEN`: Slack bot token you generated 
-    - `SLACK_CHANNEL_ID`: Slack channel ID you want to post 
-    - `OPENAI_API_KEY`: OpenAI API Key
+    - `SHEET_NAME`(required): Spreadsheet name
+    - `SLACK_BOT_TOKEN`(required): Slack bot token you generated 
+    - `SLACK_CHANNEL_ID`(required): Slack channel ID you want to post 
+    - `OPENAI_API_KEY`(optional): OpenAI API Key
 
 5. Run
     - Recommend to set some triggers
