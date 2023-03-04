@@ -28,21 +28,24 @@ When there is not, generate a theme with OpenAI and post it. The Generated theme
 
 3. Create a spreadsheet and gas, and copy script ID
 
-4. Login your google account with clasp
+4. Enable Script API
+    - open `https://script.google.com/home/usersettings` and turn on
+
+5. Login your google account with clasp
     - run `npx clasp login`
 
-5. Clone the gas
+6. Clone the gas
     - run `npx clasp clone <copied script ID>`
 
-6. Set Script Properties in gas
+7. Set Script Properties in gas
     - `SHEET_NAME`(required): Spreadsheet name
     - `SPREADSHEET_URL`(required): Spreadsheet URL
     - `SLACK_BOT_TOKEN`(required): Slack bot token you generated 
     - `SLACK_CHANNEL_ID`(required): Slack channel ID you want to post 
     - `OPENAI_API_KEY`(optional): OpenAI API Key
 
-6. Build and deploy
+8. Build and deploy
     - run `yarn run deploy` or `npm run deploy`
 
-7. Run
+9.  Run
     - Recommend to set some triggers
