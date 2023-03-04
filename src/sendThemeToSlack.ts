@@ -1,7 +1,7 @@
 /**
  * スプレッドシートからテーマを取得、ない場合は OpenAI でテーマを生成して、Slack に投稿する
  */
-function postThemeToSlack() {
+function postTopicToSlack() {
     // スプレッドシートの列を取得
     const sheetID = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
     const sheetName = PropertiesService.getScriptProperties().getProperty("SHEET_NAME");

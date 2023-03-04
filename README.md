@@ -1,6 +1,8 @@
-# PostThemeToSlack
+# PostCoffeeChatTopicToSlack
 
-Google Apps Script Library to post Coffee chat theme to Slack!
+![](https://img.shields.io/badge/license-MIT-green) 
+
+Google Apps Script Library to post Coffee chat topic to Slack!
 
 ![](Screenshots/slack.png)
 
