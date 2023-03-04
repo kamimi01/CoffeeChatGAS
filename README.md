@@ -1,6 +1,6 @@
-# CoffeeChatGAS
+# PostThemeToSlack
 
-Google Apps Script to post Coffee chat theme to Slack!
+Google Apps Script Library to post Coffee chat theme to Slack!
 
 ![](Screenshots/slack.png)
 
@@ -9,7 +9,7 @@ When there is not, generate a theme with OpenAI and post it. The Generated theme
 
 ![](Screenshots/spreadsheet.png)
 
-## Development
+## How to Use
 
 ### Prerequisites
 
@@ -19,6 +19,24 @@ When there is not, generate a theme with OpenAI and post it. The Generated theme
     - If you always list the theme in the spreadsheet, you do not need to generate the key because OpenAI API is used only when there isn't a theme in the spreadsheet.
 
 ### Procedures
+
+1. Add this library
+    - Script ID: `1txerOughnxEYjCctZUXEItPWbDeeiblw99S8paDrnBgAio6kX1gqTnVp`
+
+1. Call `postThemeToSlack` function
+
+   ```js
+   PostThemeToSlack.postThemeToSlack();
+   ```
+
+1. Set Script Properties in gas
+    - `SHEET_NAME`(required): Spreadsheet name
+    - `SPREADSHEET_URL`(required): Spreadsheet URL
+    - `SLACK_BOT_TOKEN`(required): Slack bot token you generated 
+    - `SLACK_CHANNEL_ID`(required): Slack channel ID you want to post 
+    - `OPENAI_API_KEY`(optional): OpenAI API Key
+
+## Development
 
 1. clone this repo
     - run `git clone <this repo url>`
@@ -37,15 +55,8 @@ When there is not, generate a theme with OpenAI and post it. The Generated theme
 6. Clone the gas
     - run `npx clasp clone <copied script ID>`
 
-7. Set Script Properties in gas
-    - `SHEET_NAME`(required): Spreadsheet name
-    - `SPREADSHEET_URL`(required): Spreadsheet URL
-    - `SLACK_BOT_TOKEN`(required): Slack bot token you generated 
-    - `SLACK_CHANNEL_ID`(required): Slack channel ID you want to post 
-    - `OPENAI_API_KEY`(optional): OpenAI API Key
-
-8. Build and deploy
+7. Build and deploy
     - run `yarn run deploy` or `npm run deploy`
 
-9.  Run
+8.  Run
     - Recommend to set some triggers
