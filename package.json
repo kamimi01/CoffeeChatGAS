@@ -1,0 +1,19 @@
+{
+  "name": "CoffeeChatGAS",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:kamimi01/CoffeeChatGAS.git",
+  "author": "kamimi",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc --build ./tsconfig.json",
+    "watch": "npx tsc -w",
+    "deploy": "npx tsc --build && npx clasp push"
+  },
+  "devDependencies": {
+    "@types/google-apps-script": "^1.0.57",
+    "clasp": "^1.0.0",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {}
+}
