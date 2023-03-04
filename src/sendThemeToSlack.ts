@@ -178,7 +178,7 @@ function generateNotifyBlockMessage_(theme: string) {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "参加お待ちしてます :raised_hands:（雑談テーマの確認・変更は<https://google.com|ここから>）"
+                    "text": `参加お待ちしてます :raised_hands:（雑談テーマの確認・変更は<${PropertiesService.getScriptProperties().getProperty("SPREADSHEET_URL")}|ここから>）`
                 }
             }
         ]
