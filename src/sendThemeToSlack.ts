@@ -1,6 +1,11 @@
-function sendThemeToSlack() {
+/**
+ * スプレッドシートからテーマを取得、ない場合は OpenAI でテーマを生成して、Slack に投稿する
+ */
+function postThemeToSlack() {
     // スプレッドシートの列を取得
-    const sheet = getSheet_(PropertiesService.getScriptProperties().getProperty("SHEET_NAME"));
+    const sheetID = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+    const sheetName = PropertiesService.getScriptProperties().getProperty("SHEET_NAME");
+    const sheet = SpreadsheetApp.openById(sheetID).getSheetByName(sheetName);
     const dateList = getDateList_(sheet);
 
     // 翌日の取得
