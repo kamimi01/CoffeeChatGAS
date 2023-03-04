@@ -14,7 +14,7 @@ When there is not, generate a theme with OpenAI and post it. The Generated theme
 1. Create Slack app and Get bot token
 
 1. Generate OpenAI API Key
-    - If you always list the theme in the spreadsheet, you do not need to generate it because OpenAI API is used only when there isn't a theme in the spreadsheet.
+    - If you always list the theme in the spreadsheet, you do not need to generate the key because OpenAI API is used only when there isn't a theme in the spreadsheet.
 
 2. Create Spreadsheet and Google Apps Script(GAS)
 
