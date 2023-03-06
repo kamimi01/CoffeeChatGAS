@@ -1,8 +1,6 @@
 # PostCoffeeChatTopicToSlack
 
-![](https://img.shields.io/badge/license-MIT-green) 
-
-Google Apps Script Library to post Coffee chat topic to Slack!
+Google Apps Script to post Coffee chat topic to Slack!
 
 ![](Screenshots/slack.png)
 
@@ -11,7 +9,7 @@ When there is not, generate a theme with OpenAI and post it. The Generated theme
 
 ![](Screenshots/spreadsheet.png)
 
-## How to Use
+## Development
 
 ### Prerequisites
 
@@ -20,16 +18,7 @@ When there is not, generate a theme with OpenAI and post it. The Generated theme
 1. Generate OpenAI API Key
     - If you always list the theme in the spreadsheet, you do not need to generate the key because OpenAI API is used only when there isn't a theme in the spreadsheet.
 
-### Procedures
-
-1. Add this library
-    - Script ID: `1txerOughnxEYjCctZUXEItPWbDeeiblw99S8paDrnBgAio6kX1gqTnVp`
-
-1. Call `postThemeToSlack` function
-
-   ```js
-   PostThemeToSlack.postThemeToSlack();
-   ```
+1. Create a spreadsheet and gas
 
 1. Set Script Properties in gas
     - `SHEET_NAME`(required): Spreadsheet name
@@ -39,7 +28,7 @@ When there is not, generate a theme with OpenAI and post it. The Generated theme
     - `SLACK_CHANNEL_ID`(required): Slack channel ID you want to post 
     - `OPENAI_API_KEY`(optional): OpenAI API Key
 
-## Development
+## Procedures
 
 1. clone this repo
     - run `git clone <this repo url>`
@@ -61,5 +50,5 @@ When there is not, generate a theme with OpenAI and post it. The Generated theme
 7. Build and deploy
     - run `yarn run deploy` or `npm run deploy`
 
-8.  Run
+8. Run
     - Recommend to set some triggers
