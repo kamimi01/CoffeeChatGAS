@@ -1,17 +1,22 @@
 /**
  * スプレッドシートからテーマを取得、ない場合は OpenAI でテーマを生成して、Slack に投稿する（日本語対応のみ）
+ * @param sheetName スプレッドシート名
+ * @param sheetId スプレッドシート ID
+ * @param slackBotToken Slack の Bot Token
+ * @param slackChannelId Slack の Channel ID
+ * @param openAIAPIKey OpenAI の API Key
  * @param content Slack に投稿するメッセージ。文字列または Block Kit（テーマを表示したい箇所は`@topic`とする）
  */
-function postTopicToSlack(content: {} | string) {
-    checkRequiredProperties_();
-
+function postTopicToSlack(
+    sheetName: string,
+    sheetId: string,
+    slackBotToken: string,
+    slackChannelId: string,
+    openAIAPIKey: string,
+    content: {} | string,
+) {
     // スプレッドシートの列を取得
-    const sheetID = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
-    console.log(sheetID)
-    const sheetName = PropertiesService.getScriptProperties().getProperty("SHEET_NAME");
-    console.log(sheetName)
-    const sheet = SpreadsheetApp.openById(sheetID).getSheetByName(sheetName);
-    console.log(sheet)
+    const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(sheetName);
     const dateList = getDateList_(sheet);
 
     // 翌日の取得
@@ -19,25 +24,11 @@ function postTopicToSlack(content: {} | string) {
     console.log(nextdayString)
 
     // テーマを取得（スプレッドシートにあればそれを、なければOpenAIで生成する）
-    let theme = getTheme_(dateList, sheet, nextdayString);
+    let theme = getTheme_(dateList, sheet, nextdayString, openAIAPIKey);
     console.log(theme);
 
     // Slackに投稿
-    postTextToSlack_(content, theme);
-}
-
-/**
- * プロパティの値が存在するかチェックする
- */
-function checkRequiredProperties_() {
-    const sheetName = PropertiesService.getScriptProperties().getProperty("SHEET_NAME");
-    const sheetId = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
-    const slackBotToken = PropertiesService.getScriptProperties().getProperty("SLACK_BOT_TOKEN");
-    const slackChannelId = PropertiesService.getScriptProperties().getProperty("SLACK_CHANNEL_ID");
-
-    if (sheetName == undefined || sheetId == undefined || slackBotToken == undefined || slackChannelId == undefined) {
-        throw `Required script properties are undefined as following. Please set script properties.\nSHEET_NAME:${sheetName}\nSPREADSHEET_ID:${sheetId}\nSLACK_BOT_TOKEN:${slackBotToken}\nSLACK_CHANNEL_ID:${slackChannelId}`
-    }
+    postTextToSlack_(slackBotToken, slackChannelId, content, theme);
 }
 
 /**
@@ -79,7 +70,8 @@ function getNextDate_(): string {
 function getTheme_(
     dateList: string[][],
     sheet: GoogleAppsScript.Spreadsheet.Sheet,
-    nextdayString: string
+    nextdayString: string,
+    openAIAPIKey: string
 ): string {
     let theme = "";
     for (let i = 0; i < dateList.length; i++) {
@@ -91,7 +83,7 @@ function getTheme_(
 
             // スプレッドシートにテーマがないときは、OpenAI でテーマを生成する
             if (theme == "") {
-                theme = requestOpenAI_();
+                theme = requestOpenAI_(openAIAPIKey);
                 writeThemeToSpreadsheet_(theme, sheet, cell)
             }
         }
@@ -102,8 +94,7 @@ function getTheme_(
 /**
  * OpenAI Text Completion API にリクエストして雑談テーマを生成する
  */
-function requestOpenAI_(): string {
-    const apiKey = PropertiesService.getScriptProperties().getProperty("OPENAI_API_KEY");
+function requestOpenAI_(apiKey: string): string {
     const url = "https://api.openai.com/v1/completions";
     const prompt = "あなたはChatbotで、陽気で話しかけやすい人です。\n以下の制約条件を厳密に守って、雑談テーマを1つ提案してください。\n制約条件\n* Chatbotは雑談テーマをできるだけ詳しく提案します。\n* 「おしゃべりマン」というbotです。\n* 「好きな〇〇」や「気になる〇〇」という形式で答えます。\n* 「おしゃべりマン」のあなただったらどう答えるかも教えてください。\n* 一人称は「私」です。\n* ジェンダー、家族、体、政治、宗教の話題は避けてください。";
 
@@ -143,13 +134,10 @@ function writeThemeToSpreadsheet_(theme: string, sheet: GoogleAppsScript.Spreads
 /**
  * Slackにテーマを投稿する
  */
-function postTextToSlack_(content: {} | string, theme: string) {
+function postTextToSlack_(token: string, channel: string, content: {} | string, theme: string) {
     if (theme == "") {
         return
     };
-
-    const token = PropertiesService.getScriptProperties().getProperty("SLACK_BOT_TOKEN");
-    const channel = PropertiesService.getScriptProperties().getProperty("SLACK_CHANNEL_ID");
 
     let message = {};
     if (typeof content == "string") {
