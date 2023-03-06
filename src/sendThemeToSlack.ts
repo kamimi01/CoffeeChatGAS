@@ -1,11 +1,17 @@
 /**
- * スプレッドシートからテーマを取得、ない場合は OpenAI でテーマを生成して、Slack に投稿する
+ * スプレッドシートからテーマを取得、ない場合は OpenAI でテーマを生成して、Slack に投稿する（日本語対応のみ）
+ * @param content Slack に投稿するメッセージ。文字列または Block Kit（テーマを表示したい箇所は`@topic`とする）
  */
-function postTopicToSlack() {
+function postTopicToSlack(content: {} | string) {
+    checkRequiredProperties_();
+
     // スプレッドシートの列を取得
     const sheetID = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+    console.log(sheetID)
     const sheetName = PropertiesService.getScriptProperties().getProperty("SHEET_NAME");
+    console.log(sheetName)
     const sheet = SpreadsheetApp.openById(sheetID).getSheetByName(sheetName);
+    console.log(sheet)
     const dateList = getDateList_(sheet);
 
     // 翌日の取得
@@ -17,7 +23,21 @@ function postTopicToSlack() {
     console.log(theme);
 
     // Slackに投稿
-    postTextToSlack_(theme);
+    postTextToSlack_(content, theme);
+}
+
+/**
+ * プロパティの値が存在するかチェックする
+ */
+function checkRequiredProperties_() {
+    const sheetName = PropertiesService.getScriptProperties().getProperty("SHEET_NAME");
+    const sheetId = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+    const slackBotToken = PropertiesService.getScriptProperties().getProperty("SLACK_BOT_TOKEN");
+    const slackChannelId = PropertiesService.getScriptProperties().getProperty("SLACK_CHANNEL_ID");
+
+    if (sheetName == undefined || sheetId == undefined || slackBotToken == undefined || slackChannelId == undefined) {
+        throw `Required script properties are undefined as following. Please set script properties.\nSHEET_NAME:${sheetName}\nSPREADSHEET_ID:${sheetId}\nSLACK_BOT_TOKEN:${slackBotToken}\nSLACK_CHANNEL_ID:${slackChannelId}`
+    }
 }
 
 /**
@@ -123,19 +143,33 @@ function writeThemeToSpreadsheet_(theme: string, sheet: GoogleAppsScript.Spreads
 /**
  * Slackにテーマを投稿する
  */
-function postTextToSlack_(theme: string) {
+function postTextToSlack_(content: {} | string, theme: string) {
     if (theme == "") {
         return
     };
 
-    const postRequestUrl = "https://slack.com/api/chat.postMessage";
-    const blocks = generateNotifyBlockMessage_(theme);
     const token = PropertiesService.getScriptProperties().getProperty("SLACK_BOT_TOKEN");
-    const message = {
-        token: token,
-        blocks: blocks['blocks'],
-        channel: PropertiesService.getScriptProperties().getProperty("SLACK_CHANNEL_ID"),
-    };
+    const channel = PropertiesService.getScriptProperties().getProperty("SLACK_CHANNEL_ID");
+
+    let message = {};
+    if (typeof content == "string") {
+        const text = generateNotifyText_(content, theme);
+        message = {
+            token: token,
+            text: text,
+            channel: channel,
+        }
+    } else {
+        const blocks = generateNotifyBlockMessage_(content, theme);
+        message = {
+            token: token,
+            blocks: blocks['blocks'],
+            channel: channel,    
+        }
+    }
+    console.log(message);
+
+    const postRequestUrl = "https://slack.com/api/chat.postMessage";
 
     const messagePayload = JSON.stringify(message);
     const messageOptions: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
@@ -151,41 +185,23 @@ function postTextToSlack_(theme: string) {
 /**
  * Slack通知用のメッセージ作成
  */
-function generateNotifyBlockMessage_(theme: string) {
-    return {
-        "blocks": [
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": ":sunny::sunny::sunny: *明日10:15から Slack で雑談会します！*:sunny::sunny::sunny:"
-                }
-            },
-            {
-                "type": "divider"
-            },
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": `*お題*\n${theme}`
-                },
-                "accessory": {
-                    "type": "image",
-                    "image_url": "https://user-images.githubusercontent.com/47489629/222876369-00291ef8-ee8d-4550-9c5f-d640c6dec87f.png",
-                    "alt_text": "alt text for image"
-                }
-            },
-            {
-                "type": "divider"
-            },
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": `参加お待ちしてます :raised_hands:（雑談テーマの確認・変更は<${PropertiesService.getScriptProperties().getProperty("SPREADSHEET_URL")}|ここから>）`
-                }
-            }
-        ]
+function generateNotifyText_(context: string, theme: string): string {
+    let keyString = "@topic";
+    if (context.includes(keyString)) {
+        return context.replace(keyString, theme);
     }
+    return context;
+} 
+
+/**
+ * Slack通知用のBlockメッセージ作成
+ */
+function generateNotifyBlockMessage_(content: {}, theme: string) {
+    let jsonString = JSON.stringify(content);
+    let keyString = "@topic";
+    if (jsonString.includes(keyString)) {
+        let replacedString = jsonString.replace(keyString, theme);
+        return JSON.parse(replacedString);
+    }
+    return content;
 };
